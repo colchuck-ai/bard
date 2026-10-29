@@ -117,11 +117,13 @@ fi
 
 # Pick the source. A local checkout is used only when run from one with no --ref.
 # (When piped from curl there is no script file, so there is no checkout.)
+# A checkout is recognized by skills/bard/evals/, which installs never contain,
+# so a script saved next to an existing install isn't mistaken for one.
 SCRIPT_DIR=""
 if [ -f "${BASH_SOURCE[0]:-}" ]; then
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 fi
-if [ -z "$REF" ] && [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/skills/bard/SKILL.md" ]; then
+if [ -z "$REF" ] && [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/skills/bard/SKILL.md" ] && [ -d "$SCRIPT_DIR/skills/bard/evals" ]; then
   MODE="local";   WHAT="this checkout ($SCRIPT_DIR)"
 elif [ -z "$REF" ]; then
   MODE="release"; WHAT="the latest release"; URL_BASE="$RELEASES/latest/download"

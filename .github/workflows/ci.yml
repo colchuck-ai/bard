@@ -47,7 +47,9 @@ jobs:
           scripts/build-release.sh
           mirror="$RUNNER_TEMP/mirror/latest/download"
           mkdir -p "$mirror" && cp dist/* "$mirror/"
-          cp install.sh "$RUNNER_TEMP/install.sh"   # outside the checkout, so it downloads
+          # Run a copy outside the checkout, next to the earlier install, so it
+          # must download rather than mistake that install for a checkout.
+          cp install.sh "$RUNNER_TEMP/install.sh"
           BARD_RELEASES_URL="file://$RUNNER_TEMP/mirror" "$RUNNER_TEMP/install.sh" "$RUNNER_TEMP/rel/bard"
           test -f "$RUNNER_TEMP/rel/bard/SKILL.md"
       - name: Refuses to overwrite an unrelated directory
