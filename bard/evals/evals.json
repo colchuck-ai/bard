@@ -1,0 +1,112 @@
+{
+  "skill_name": "bard",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need a story about our team's migration from Jenkins to GitHub Actions for next week's engineering all-hands. Can you help?",
+      "expected_output": "The agent does not draft the story yet. It asks a first round of 3-5 focused interview questions covering the audience, length or time slot, the takeaway, and how literal the story must be, and it asks for concrete moments (what went wrong, a turning point) rather than a general summary of the migration.",
+      "files": [],
+      "assertions": [
+        "The response does not contain a drafted story or script",
+        "The response asks 3-5 numbered or clearly separate questions (a compound question counts as one)",
+        "One question asks what the audience should know, feel, or do afterwards (the takeaway)",
+        "One question asks how literal or factual the story must be, or whether dramatization is acceptable",
+        "At least one question asks for a specific moment, problem, or turning point rather than a general description",
+        "The response includes exactly one short line offering the optional bard voice, and is otherwise plain (no medieval diction)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Turn these incident notes into a 5-minute talk for our company-wide engineering meeting. The audience is all engineers, not just data folks. Keep it strictly factual, no invented quotes. I've given you everything I have, so don't interview me, just write it.",
+      "expected_output": "A talk script of roughly 650-750 words with pacing cues, opening on a moment of tension rather than background, built on one named structure, with a single takeaway (e.g. a green job status is not the same as correct data / fail loudly). Every quotation-marked string appears verbatim in the notes; it does not blame a person and ends with delivery notes listing the structure used and any gaps or assumptions.",
+      "files": [
+        "evals/files/incident-notes.md"
+      ],
+      "assertions": [
+        "The script is between 600 and 800 spoken words, excluding cues like [PAUSE]/[SLIDE: ...], headings, and delivery notes",
+        "The script body itself (not only the notes) includes inline spoken pacing cues such as [PAUSE] or [SLIDE: ...]",
+        "The first two sentences describe a specific moment, number, or question, not general background about the company or team",
+        "Every string in quotation marks in the script (including short phrases) appears verbatim in the incident notes, except obvious scare quotes around a single word",
+        "No named person is framed as the cause of the incident",
+        "The script states one central takeaway about job health not meaning data correctness, or about failing loudly instead of silently",
+        "Delivery notes after the script name the story structure used",
+        "The script does not name its structure or beats aloud (e.g. 'that's the low point', 'here's the turn')"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write a short story (under 600 words) for our onboarding wiki that teaches new hires how DNS resolution works. Fiction is fine, make it fun, but the technical content has to be right.",
+      "expected_output": "A story under 600 words with a protagonist (for example a request or a new hire) that opens on a question or puzzle, reveals the resolution chain (stub resolver or cache, recursive resolver, root, TLD, authoritative server, caching with TTL) in a correct order, ties each step to the protagonist's problem rather than a lecture, and ends with one plain takeaway. Delivery notes name the structure.",
+      "files": [],
+      "assertions": [
+        "The story is under 600 words, excluding the title and delivery notes",
+        "The story has a protagonist who wants something",
+        "The story opens with a question, puzzle, or moment rather than a definition of DNS",
+        "The story mentions a recursive resolver, a root server, a TLD server, and an authoritative server in that order",
+        "The story mentions caching or TTL",
+        "The story contains no technically incorrect claim about DNS resolution, including in its setup or puzzle",
+        "Delivery notes name the story structure used, and it is Mystery or Kishōtenketsu"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "We're writing a customer case study about how Hartwell Logistics cut their invoice reconciliation time using our product. I'm meeting their CTO, Dana Okafor, on Thursday. Can you prepare what I should ask her?",
+      "expected_output": "An interview guide for the user to take to Dana Okafor (the agent does not try to contact her), framed so the customer is the hero: questions about Hartwell's situation before, the problem and how it felt, the moment things changed, concrete before/after numbers, and a permissions section for using her name and quotes. Assumptions about audience and takeaway are stated rather than asked.",
+      "files": [],
+      "assertions": [
+        "The response contains an interview guide addressed to the user to use with Dana Okafor, not a drafted case study",
+        "The guide is delivered without first asking the user a round of questions",
+        "The guide includes at least one question asking for a specific moment or scene rather than an opinion",
+        "The guide asks for before-and-after numbers or measurable results",
+        "The guide includes a step to get permission for using Dana's name or quotes",
+        "The questions center Hartwell's problem and experience rather than praising the user's product"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Here's the story of our rollout, already factual and approved: In 2025 our support team answered tickets in 19 hours on average. In January 2026 we routed every ticket through a triage bot. Within a week, customers complained the bot sent them in circles; CSAT fell from 4.4 to 3.1. Support lead Jun Park pulled the bot from billing tickets only, where most loops happened. By April, median first response was 2 hours and CSAT was 4.6. Give me a one-sentence logline, a ~100-word version for the newsletter, and a 2-minute script for Friday's town hall. Don't ask me anything.",
+      "expected_output": "Three versions produced shortest to longest without asking questions: a one-sentence logline, a ~100-word newsletter piece, and a ~260-300 word spoken script with inline cues. All facts match the prompt, no invented quotes, the CSAT dip is used as the low point, and the takeaway is consistent across versions. Delivery notes name the structure.",
+      "files": [],
+      "assertions": [
+        "The response asks the user no questions before delivering",
+        "The logline is a single sentence",
+        "The newsletter version is between 80 and 130 words",
+        "The town-hall script is between 220 and 330 spoken words (excluding cues and headings) and includes inline pacing cues such as [PAUSE]",
+        "No numbers, dates, or names appear that are not in the prompt (derived arithmetic excepted)",
+        "No quotation attributed to Jun Park or anyone else appears",
+        "At least one version uses the CSAT drop to 3.1 as a low point before the resolution",
+        "No version presents the 19-hour average and the 2-hour median as a like-for-like before/after comparison without flagging that they are different measures"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a ~400-word story for our company blog about the night in 2019 when our two founders, Ana and Leo, decided to open-source the product. What we know: it was after a failed sales call with a bank; they argued in the office parking garage; Ana wanted to keep it closed; Leo had already drafted the license. Reconstructing the dialogue is fine, readers just shouldn't be misled. Don't ask me questions.",
+      "expected_output": "A ~360-440 word dramatized story built on the four known facts, with reconstructed dialogue. The piece itself discloses (briefly, e.g. an italic line) that dialogue is reconstructed, and the delivery notes list every liberty taken. No new hard facts (dates, numbers, company or bank names, outcomes) are presented as true.",
+      "files": [],
+      "assertions": [
+        "The response asks the user no questions before delivering",
+        "The story is between 340 and 460 words, excluding title and delivery notes",
+        "The story includes reconstructed dialogue between Ana and Leo",
+        "The published piece itself (not only the notes) tells readers the dialogue or details are reconstructed",
+        "Delivery notes list the liberties taken (e.g. dialogue, invented sensory details, compressed timing)",
+        "No specific new facts (a bank's name, revenue numbers, an exact date, a later outcome) are stated as true unless flagged in the notes as invented or to be checked",
+        "The story does not name its structure or beats inside the piece"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Help me tell the story of our Jenkins to GitHub Actions migration at next week's engineering all-hands. Also, talk to me like a bard: the whole barrel!",
+      "expected_output": "An interview round in full 'whole barrel' voice: toasts, stage directions, archaic diction (rhyme optional). It still asks 3-5 numbered, plainly answerable questions (audience, slot length, takeaway, fidelity, what nearly went wrong), keeps names like Jenkins and GitHub Actions exact, does not offer the voice levels again, and drafts no story.",
+      "files": [],
+      "assertions": [
+        "The response does not contain a drafted story or script",
+        "The response uses heavy medieval or bardic voice (e.g. thee/thou, huzzah, a toast, or a stage direction like *raises tankard*)",
+        "The response asks 3-5 numbered or clearly separate questions (a compound question counts as one)",
+        "Each question can be understood and answered on one read, despite the voice",
+        "One question asks what the audience should take away, and one asks how literal the story must be",
+        "'Jenkins' and 'GitHub Actions' appear exactly, unflavored",
+        "The response does not offer the list of voice levels again (the user already chose one)"
+      ]
+    }
+  ]
+}
