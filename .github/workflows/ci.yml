@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  # The agent-skill-review validator, pinned to a commit so a change there
+  # can't silently change what passes here. Bump deliberately.
+  VALIDATOR_URL: https://raw.githubusercontent.com/colchuck-ai/agent-skill-review/61d92c02a717e05de3a4d4d0bb9a18df0b565188/agent-skill-review/scripts/validate_skill.py
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml==6.0.2
+      - name: Validate skill against the Agent Skills spec
+        run: |
+          curl -fsSL -o validate_skill.py "$VALIDATOR_URL"
+          python3 validate_skill.py skills/bard
+      - name: Check evals.json parses
+        run: python3 -m json.tool skills/bard/evals/evals.json > /dev/null
+      - name: Shellcheck scripts
+        run: shellcheck install.sh scripts/*.sh
+
+  install:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install from this checkout into a temp dir
+        run: |
+          dest="$RUNNER_TEMP/skills/bard"
+          ./install.sh "$dest"
+          test -f "$dest/SKILL.md" && test -f "$dest/LICENSE" && test ! -e "$dest/evals"
+          ./install.sh "$dest"   # reinstall over an existing install
+      - name: Install from release assets (local mirror), checksum-verified
+        if: runner.os == 'Linux'   # build-release.sh needs GNU tar
+        run: |
+          scripts/build-release.sh
+          mirror="$RUNNER_TEMP/mirror/latest/download"
+          mkdir -p "$mirror" && cp dist/* "$mirror/"
+          cp install.sh "$RUNNER_TEMP/install.sh"   # outside the checkout, so it downloads
+          BARD_RELEASES_URL="file://$RUNNER_TEMP/mirror" "$RUNNER_TEMP/install.sh" "$RUNNER_TEMP/rel/bard"
+          test -f "$RUNNER_TEMP/rel/bard/SKILL.md"
+      - name: Refuses to overwrite an unrelated directory
+        run: |
+          mkdir -p "$RUNNER_TEMP/other" && touch "$RUNNER_TEMP/other/keep"
+          if ./install.sh "$RUNNER_TEMP/other"; then exit 1; fi
+          test -f "$RUNNER_TEMP/other/keep"

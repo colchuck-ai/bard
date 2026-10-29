@@ -6,7 +6,7 @@
 
 An [Agent Skill](https://agentskills.io/home) that makes an agent act as a bard: it gathers a story's raw material, then shapes it with well-known storytelling structures so the audience stays captivated and learns something.
 
-The skill itself lives in [`bard/`](bard/). Its workflow:
+The skill itself lives in [`skills/bard/`](skills/bard/). Its workflow:
 
 1. **Frame**: audience, occasion, length, one-sentence takeaway, and fidelity (documentary, dramatized, or invented).
 2. **Gather**: interview the user in rounds, mine repos and files, research, and prepare interview guides for other stakeholders. Every fact goes in a source ledger.
@@ -42,25 +42,49 @@ Ask an agent for a story, e.g. "help me turn our database migration into a 5-min
 
 ## Install
 
+**With the `npx skills` installer** (supports [79 agents](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)):
+
 ```bash
-./install.sh                  # ~/.cursor/skills/bard (default)
-./install.sh --agent claude   # ~/.claude/skills/bard
-./install.sh --help           # other agents and custom directories
+npx skills add colchuck-ai/bard -g -a claude-code       # or -a cursor, codex, gemini-cli, ...
+npx skills add https://github.com/colchuck-ai/bard/tree/v0.1.0/skills/bard -g   # pin a release
 ```
 
-Run from a clone, it installs that checkout. Run on its own (e.g. piped from curl), it clones `main` first. It refuses to overwrite a non-empty directory that isn't already a bard install.
+**With `install.sh`** (no Node needed). It installs the latest release, checksum-verified:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/colchuck-ai/bard/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/colchuck-ai/bard/main/install.sh | bash -s -- --agent cursor
+```
+
+| `--agent` | Installs to | With `--project` |
+|---|---|---|
+| `claude` (default) | `~/.claude/skills/bard` | `.claude/skills/bard` |
+| `cursor` | `~/.cursor/skills/bard` | `.agents/skills/bard` |
+| `codex`, `agents` | `~/.agents/skills/bard` | `.agents/skills/bard` |
+| `gemini` | `~/.gemini/skills/bard` | `.agents/skills/bard` |
+| `copilot` | `~/.copilot/skills/bard` | `.agents/skills/bard` |
+| `opencode` | `~/.config/opencode/skills/bard` | `.agents/skills/bard` |
+| `windsurf` | `~/.codeium/windsurf/skills/bard` | `.windsurf/skills/bard` |
+| `goose` | `~/.config/goose/skills/bard` | `.goose/skills/bard` |
+| `amp` | `~/.config/agents/skills/bard` | `.agents/skills/bard` |
+
+Paths match the `npx skills` installer, so either one puts bard in the same place. Other options: `--ref v0.1.0` pins a release, `--ref main` installs the latest commit, a directory argument installs anywhere, and `--dry-run` shows what would happen. Run from a clone with no `--ref`, it installs that checkout. It refuses to overwrite a directory that isn't already a bard install. See `install.sh --help`.
+
+## Releasing
+
+A release is a `vX.Y.Z` tag on a commit whose `metadata.version` in `skills/bard/SKILL.md` matches. See [docs/release-process.md](docs/release-process.md).
 
 ## Contents
 
-- `bard/SKILL.md`: the workflow
-- `bard/references/interviewing.md`: interview rounds, source mining, stop criteria
-- `bard/references/structures.md`: structure selection table and beats
-- `bard/references/craft.md`: openings, tension, specificity, teaching, endings, revision
-- `bard/references/formats.md`: talk scripts, slides, length ladder, written formats
-- `bard/references/voice.md`: the opt-in Mead Measure voice levels
-- `bard/assets/story-brief.md`: story brief and source ledger template
-- `bard/assets/interview-guide.md`: stakeholder interview guide template
-- `bard/evals/evals.json`: eval cases (run with and without the skill; not copied by install.sh)
+- `skills/bard/SKILL.md`: the workflow
+- `skills/bard/references/interviewing.md`: interview rounds, source mining, stop criteria
+- `skills/bard/references/structures.md`: structure selection table and beats
+- `skills/bard/references/craft.md`: openings, tension, specificity, teaching, endings, revision
+- `skills/bard/references/formats.md`: talk scripts, slides, length ladder, written formats
+- `skills/bard/references/voice.md`: the opt-in Mead Measure voice levels
+- `skills/bard/assets/story-brief.md`: story brief and source ledger template
+- `skills/bard/assets/interview-guide.md`: stakeholder interview guide template
+- `skills/bard/evals/evals.json`: eval cases (run with and without the skill; not shipped in releases)
 
 ## License
 

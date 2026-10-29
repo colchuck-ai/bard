@@ -4,7 +4,7 @@ description: Find, gather, and tell stories that captivate an audience and teach
 license: MIT
 metadata:
   author: max.dunn
-  version: "1.3"
+  version: "0.1.0"
 ---
 
 # Bard

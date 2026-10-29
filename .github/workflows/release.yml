@@ -1,0 +1,47 @@
+name: Release
+
+# A release is a tag. Push vX.Y.Z (or vX.Y.Z-rc.N for a prerelease) on a commit
+# whose skills/bard/SKILL.md says the same version, and this does the rest.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  VALIDATOR_URL: https://raw.githubusercontent.com/colchuck-ai/agent-skill-review/61d92c02a717e05de3a4d4d0bb9a18df0b565188/agent-skill-review/scripts/validate_skill.py
+
+jobs:
+  release:
+    if: github.repository == 'colchuck-ai/bard'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # release notes are generated from history
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml==6.0.2
+
+      # The same gates CI runs, on the exact commit being released.
+      - name: Validate skill
+        run: |
+          curl -fsSL -o validate_skill.py "$VALIDATOR_URL"
+          python3 validate_skill.py skills/bard
+      - name: Tag matches metadata.version
+        run: scripts/check-version.sh "$GITHUB_REF_NAME"
+
+      - name: Build assets
+        run: scripts/build-release.sh
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=""
+          case "$GITHUB_REF_NAME" in *-*) flags="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" dist/bard.tar.gz dist/checksums.txt \
+            --verify-tag --generate-notes --title "$GITHUB_REF_NAME" $flags
